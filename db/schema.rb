@@ -9,16 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110713114318) do
+ActiveRecord::Schema.define(:version => 20120815221431) do
 
   create_table "images", :force => true do |t|
-    t.integer  "hits",       :default => 0,  :null => false
-    t.string   "filename",   :default => "", :null => false
-    t.string   "path",       :default => "", :null => false
-    t.integer  "points",     :default => 0,  :null => false
+    t.integer  "hits",       :default => 0,   :null => false
+    t.string   "filename",   :default => "",  :null => false
+    t.string   "path",       :default => "",  :null => false
+    t.integer  "points",     :default => 0,   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "site_id"
+    t.decimal  "lat",        :default => 0.0
+    t.decimal  "lon",        :default => 0.0
+    t.string   "mgrs",       :default => ""
   end
 
   create_table "participants", :force => true do |t|
@@ -26,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20110713114318) do
     t.string   "key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "login",      :default => ""
   end
 
   create_table "sites", :force => true do |t|
@@ -37,6 +41,12 @@ ActiveRecord::Schema.define(:version => 20110713114318) do
     t.decimal  "end_lat",      :precision => 20, :scale => 10, :default => 0.0
     t.decimal  "end_lon",      :precision => 20, :scale => 10, :default => 0.0
     t.datetime "capture_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "map_export",                                   :default => ""
+  end
+
+  create_table "users", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
