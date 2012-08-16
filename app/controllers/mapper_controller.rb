@@ -41,7 +41,7 @@ class MapperController < ApplicationController
 		end
 
 		@image = pool[((pool.length-1)*rand).to_i]
-		@image.thumb
+		@image.thumb unless @image.nil?
 	end
 
 	def sort

@@ -49,9 +49,12 @@ if __name__ == "__main__":
         cells, files = {}, {}
         for filename in os.listdir(dir):
             if not filename.endswith(".JPG"): continue
-            lon, lat = get_gps_coords(os.path.join(dir, filename))
-            cell = m.toMGRS(lat, lon, MGRSPrecision=3)
-            box = get_mgrs_box(cell)
+            try:
+                lon, lat = get_gps_coords(os.path.join(dir, filename))
+                cell = m.toMGRS(lat, lon, MGRSPrecision=3)
+                box = get_mgrs_box(cell)
+            except TypeError:
+                print >>sys.stderr, "Can't read metadata from", dir + "/" + filename
             files[filename] = {"lon": lon, "lat": lat, "mgrs": cell, "box": box}
         idx = file(os.path.join(dir, "index.json"), "w")
         json.dump(files, idx, indent=2)

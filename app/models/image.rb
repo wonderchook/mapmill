@@ -46,5 +46,9 @@ class Image < ActiveRecord::Base
 		end
 		'/thumbnails/'+self.site.name+'/'+filename
 	end
-
+        def self.grid
+          cells = self.all(:select=>"avg(points) as points, sum(hits) as hits, count(*) as images, box", :group => "mgrs")
+          cells.each {|cell| cell.box = JSON.parse(cell.box) if cell.box }
+          cells
+        end
 end

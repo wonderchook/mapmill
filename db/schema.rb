@@ -10,6 +10,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20120816172807) do
+
   create_table "images", :force => true do |t|
     t.integer  "hits",       :default => 0,   :null => false
     t.string   "filename",   :default => "",  :null => false
@@ -47,16 +48,8 @@ ActiveRecord::Schema.define(:version => 20120816172807) do
   end
 
   create_table "users", :force => true do |t|
-<<<<<<< HEAD
-    t.string   "login"
-    t.string   "hashed_password"
-    t.string   "email"
-    t.string   "salt"
-    t.datetime "created_at"
-=======
     t.datetime "created_at"
     t.datetime "updated_at"
->>>>>>> 9f9223e4a1e613baa8422af1f59ffb23494662a1
   end
 
 end
