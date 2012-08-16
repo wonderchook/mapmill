@@ -43,7 +43,7 @@ class Site < ActiveRecord::Base
   			if image[-3..-1] && image[-3..-1].downcase == 'jpg'
   				unless Image.find_by_path("sites/"+name+"/"+image)
   				  image_metadata = get_metadata(image,RAILS_ROOT+'/public/sites/'+self.name)
-  					i = Image.new({:path => "sites/"+name+"/"+image,:filename => image.split('/').last,:site_id => self.id, :lat => image_metadata["lat"],:lon => image_metadata["lon"], :mgrs =>image_metadata["mgrs"],:box =>image_metadata["box"].to_s})    
+  					i = Image.new({:path => "sites/"+name+"/"+image,:filename => image.split('/').last,:site_id => self.id, :lat => image_metadata["lat"],:lon => image_metadata["lon"], :mgrs =>image_metadata["mgrs"],:box =>image_metadata["box"].to_json})    
   					i.save
   				end
   			end
