@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Quick Start Guide Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
+    <![endif]-->
+    <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
+    <script src="cells.js"></script>
+    <script>
+        var map, popup;
+
+        function featureStyle(feature) {
+            return {
+                weight: 0.1,
+                opacity: 1,
+                color: 'red',
+                //dashArray: '3',
+                fillOpacity: 0.5,
+                fillColor: 'red' //getColor(feature.properties.density)
+            };
+        }
+
+        function onMapClick(e) {
+            popup
+            .setLatLng(e.latlng)
+            .setContent("You clicked the map at " + e.latlng.toString())
+            .openOn(map);
+        }
+
+        function onLoad() {
+            map = L.map('map').setView([35.7963, -120.7447], 13);
+
+            L.tileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-streets/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">MapBox</a>'
+            }).addTo(map);
+
+
+            geojson = L.geoJson(cells, {
+                style: featureStyle
+                //onEachFeature: onEachFeature
+            }).addTo(map);
+
+            popup = L.popup();
+            map.on('click', onMapClick);
+        }
+    </script>
+</head>
+<body onLoad="onLoad()">
+    <div id="map" style="width: 600px; height: 400px"></div>
+</body>
+</html>
