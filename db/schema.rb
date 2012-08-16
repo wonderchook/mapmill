@@ -9,8 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120815221044) do
-
+ActiveRecord::Schema.define(:version => 20120816172807) do
   create_table "images", :force => true do |t|
     t.integer  "hits",       :default => 0,   :null => false
     t.string   "filename",   :default => "",  :null => false
@@ -22,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20120815221044) do
     t.decimal  "lat",        :default => 0.0
     t.decimal  "lon",        :default => 0.0
     t.string   "mgrs",       :default => ""
+    t.string   "box",        :default => ""
   end
 
   create_table "participants", :force => true do |t|
@@ -47,11 +47,16 @@ ActiveRecord::Schema.define(:version => 20120815221044) do
   end
 
   create_table "users", :force => true do |t|
+<<<<<<< HEAD
     t.string   "login"
     t.string   "hashed_password"
     t.string   "email"
     t.string   "salt"
     t.datetime "created_at"
+=======
+    t.datetime "created_at"
+    t.datetime "updated_at"
+>>>>>>> 9f9223e4a1e613baa8422af1f59ffb23494662a1
   end
 
 end
