@@ -1,0 +1,7 @@
+index_mgrs.py uses GDAL's Python bindings and Howard Butler's mgrs library to
+read the EXIF tags from a Nikon D90 JPEG image, and spits out a simple JSON
+dict into index.json in the same directory that maps filename to a dict
+containing {'lat', 'lon', 'mgrs'}.
+
+Yes, I know this is written in Python and the rest of the project is in Ruby.
+*sad panda*
