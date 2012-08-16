@@ -17,6 +17,7 @@
 			<% else %><a href="/admin/activate/<%= site.id %>">Activate</a><% end %></i>
 			<% if site.images.length == 0 %> | <i><a href="/admin/import_site/<%= site.name %>">Import</a></i><% end %>
 			<% if site.images.length > 0 %> | <i><a href="/admin/import_site/<%= site.name %>">Import more</a></i><% end %>
+			<% if site.images.length > 0 %> | <i><a href="/admin/export_score/<%= site.name %>">Export Scores</a></i><% end %>
 		</div>
 	<% end %>
 </div>

@@ -22,6 +22,14 @@ class MapperController < ApplicationController
 		@images = @images.paginate :per_page => 20, :page => params[:page]
 		#@images.paginate :page => params[:page], :per_page => 21
 	end
+	
+	
+	def export
+	  @site = Site.find_by_name(params[:site])
+	  images = @site.images unless params[:filter]
+    images = Image.find_all_by_site_id(@site.id, :conditions => {:hits=> 0, :points => 0}) if params[:filter] == "unsorted"
+    @images = images
+	end
 
 	# currently collects 5 lowest vote-count images from each site,
 	# removing thumb dirs, from the end of the list, alphabetically? dumb.
@@ -64,6 +72,7 @@ class MapperController < ApplicationController
 			redirect_to path 
 		end
 	end
+	
 	
 	def save_site_location
 		redirect_to 'sites'
