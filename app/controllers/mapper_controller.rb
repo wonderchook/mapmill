@@ -27,8 +27,8 @@ class MapperController < ApplicationController
 	def export
 	  @site = Site.find_by_name(params[:site])
 	  images = @site.images unless params[:filter]
-    images = Image.find_all_by_site_id(@site.id, :conditions => {:hits=> 0, :points => 0}) if params[:filter] == "unsorted"
-    @images = images
+          images = Image.find_all_by_site_id(@site.id, :conditions => {:hits=> 0, :points => 0}) if params[:filter] == "unsorted"
+          @images = images
 	end
 
 	# currently collects 5 lowest vote-count images from each site,
