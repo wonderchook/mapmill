@@ -1,10 +1,3 @@
-{ images:
-<% for image in @images %>
-{
-    "hits": "<%= image.hits.to_json %>",
-    "filename": "<%= image.filename.to_json %>",
-	"path": "<%= image.path.to_json %>",
-    "points": "<%= image.points.to_json %>"
-},
-<%- end -%>
+{images:
+<%= @images.to_json %>
 }
