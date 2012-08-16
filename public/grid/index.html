@@ -8,12 +8,39 @@
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
     <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
-    <script src="cells.js"></script>
     <script>
         var map, popup;
 
+        function hsv_to_rgb (h, s, v) {
+            var r, g, b, f, p, q, t;
+            if( s == 0 ) {
+                // achromatic (grey)
+                r = g = b = v;
+                return;
+            }
+            h /= 60;            // sector 0 to 5
+            i = floor( h );
+            f = h - i;          // factorial part of h
+            p = v * ( 1 - s );
+            q = v * ( 1 - s * f );
+            t = v * ( 1 - s * ( 1 - f ) );
+            switch( i ) {
+                case 0: r = v; g = t; b = p; break;
+                case 1: r = q; g = v; b = p; break;
+                case 2: r = p; g = v; b = t; break;
+                case 3: r = p; g = q; b = v; break;
+                case 4: r = t; g = p; b = v; break;
+                default:        // case 5:
+                        r = v; g = p; b = q; break;
+            }
+            return [r, g, b];
+        }
+
         function featureStyle(feature) {
+            var score = feature.properties.points / (feature.properties.hits * 10);
+            var color = hsv_to_rgb(score * 120, 128, 128);
             return {
                 weight: 0.1,
                 opacity: 1,
@@ -24,11 +51,15 @@
             };
         }
 
-        function onMapClick(e) {
-            popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(map);
+
+        function loadGrid(site) {
+            $.ajax("/grid/"+site+".json")
+             .done(function (data) {
+                geojson = L.geoJson(data, {
+                    style: featureStyle
+                    //onEachFeature: onEachFeature
+                }).addTo(map);
+             });
         }
 
         function onLoad() {
@@ -37,12 +68,6 @@
             L.tileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-streets/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">MapBox</a>'
-            }).addTo(map);
-
-
-            geojson = L.geoJson(cells, {
-                style: featureStyle
-                //onEachFeature: onEachFeature
             }).addTo(map);
 
             popup = L.popup();
