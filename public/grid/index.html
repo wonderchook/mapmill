@@ -52,12 +52,23 @@
             };
         }
 
+        function onEachFeature(feature, layer) {
+            if (feature.properties) {
+                var p = feature.properties;
+                var content = '<h1>' + p.mgrs + '</h1><div>'
+                    + p.images + ' images</div><div>'
+                    + p.hits + ' views</div><div>'
+                    + (p.score/p.hits/10).toFixed(2) + ' average rating</div>';
+                layer.bindPopup(content);
+            }
+        }
+
         function loadGrid(site) {
             $.ajax("/grid/"+site+".json")
              .done(function (data) {
                 geojson = L.geoJson(data, {
-                    style: featureStyle
-                    //onEachFeature: onEachFeature
+                    style: featureStyle,
+                    onEachFeature: onEachFeature
                 }).addTo(map);
              });
         }
