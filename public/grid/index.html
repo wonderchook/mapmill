@@ -11,7 +11,7 @@
     <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
     <script>
-        var map, popup;
+        var map, popup, geojson;
 
         function hsv_to_rgb (h, s, v) {
             var r, g, b, f, p, q, t;
@@ -40,17 +40,17 @@
 
         function featureStyle(feature) {
             var score = feature.properties.points / (feature.properties.hits * 10);
-            var color = hsv_to_rgb(score * 120, 128, 128);
+            var rgb = hsv_to_rgb(score * 120, 0.5, 1.0);
+            var color = 'rgb('+color[0]+','+color[1]+','color[2]+')';
             return {
                 weight: 0.1,
                 opacity: 1,
-                color: 'red',
+                color: color,
                 //dashArray: '3',
                 fillOpacity: 0.5,
-                fillColor: 'red' //getColor(feature.properties.density)
+                fillColor: color
             };
         }
-
 
         function loadGrid(site) {
             $.ajax("/grid/"+site+".json")
@@ -70,8 +70,8 @@
                 attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">MapBox</a>'
             }).addTo(map);
 
-            popup = L.popup();
-            map.on('click', onMapClick);
+            //popup = L.popup();
+            //map.on('click', onMapClick);
         }
     </script>
 </head>
