@@ -52,6 +52,22 @@
             };
         }
 
+        function highlightFeature(e) {
+            var layer = e.target;
+            layer.setStyle({ weight: 5 });
+            if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
+            }
+        }
+
+        function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+        }
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
         function onEachFeature(feature, layer) {
             if (feature.properties) {
                 var p = feature.properties;
