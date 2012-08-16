@@ -47,9 +47,4 @@ ActiveRecord::Schema.define(:version => 20120816172807) do
     t.string   "map_export",                                   :default => ""
   end
 
-  create_table "users", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
 end
