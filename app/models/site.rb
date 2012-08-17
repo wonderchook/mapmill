@@ -72,7 +72,11 @@ class Site < ActiveRecord::Base
 		self.images.each do |image|
 			with_hits += 1 if image.hits > 0
 		end
-		(100*with_hits/self.images.length).to_s+"%"
+                if self.images.length > 0
+                  (100*with_hits/self.images.length).to_s+"%"
+                else
+                  "0%"
+                end
 	end
 
 	# average score
