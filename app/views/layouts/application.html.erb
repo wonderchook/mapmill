@@ -20,7 +20,10 @@
 	<% unless params[:style] == "embed" %> | 
 	<a href="/">Home</a> | 
 	<a href="/sites">Sites</a> | 
-	<% if params[:controller] == "mapper" && (params[:action] == "index" || params[:action] == "sort") %><a href='/images/<%= @image.site.name %>'>More images from <i><%= @image.site.name %></i></a> | <% end %> 
+        <% if params[:controller] == "mapper" && (params[:action] == "index" || params[:action] == "sort") %>
+            <a href='/images/<%= @image.site.name %>'>More images from <i><%= @image.site.name %></i></a> | 
+            <a href="/grid/?<%= @image.site.name %>">Grid</a>
+        <% end %> 
 	<% end %>
 
 	<span class="links">
