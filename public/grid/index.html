@@ -1,21 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Leaflet Quick Start Guide Example</title>
+    <title>MapMill Grid</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.3/leaflet.css" />
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
     <![endif]-->
     <style type="text/css">
-        #map { width:800px; height:600px; }
+        html {
+            margin: 0px;
+            height: 100%;
+        }
+
+        body {
+            margin: 0px;
+            height: 100%;
+        }
+
+        #wrap {
+            height: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+
+        }
+        #map {
+            padding: 0px;
+            height: 100%;
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
     </style>
     <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-    <script src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.4.3/leaflet.js"></script>
     <script>
-        var map, popup, geojson;
-        var site = "20120815";
+        var map, popup, geojson, info;
+        var site = window.location.search.substr(1);
 
         function hsv_to_rgb (h, s, v) {
             if (s == 0.0) return [v, v, v]
@@ -46,7 +77,6 @@
                 red = green = blue = 225;
             }
             var color = 'rgb(' + parseInt(red) + ',' + parseInt(green) + ',' + parseInt(blue) + ')';
-            console.log(cell.mgrs, color);
             return {
                 weight: 0.5,
                 opacity: 0.5,
@@ -59,32 +89,32 @@
 
         function highlightFeature(e) {
             var layer = e.target;
-            layer.setStyle({ weight: 5 });
+            layer.setStyle({ weight: 2.0 });
             if (!L.Browser.ie && !L.Browser.opera) {
                 layer.bringToFront();
             }
+            info.update(layer.feature.properties);
         }
 
         function resetHighlight(e) {
             geojson.resetStyle(e.target);
+            info.update();
         }
 
         function zoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
+            var feature = e.target.feature;
+            if (feature) {
+                cell = feature.properties.image;
+                window.location = '/images/' + site + '?mgrs=' + cell.mgrs;
+            }
         }
 
         function onEachFeature(feature, layer) {
-            if (feature.properties) {
-                var p = feature.properties.image;
-                var content = '<h1>' + p.mgrs + '</h1><div>'
-                    + p.images + ' images</div><div>'
-                    + p.hits + ' views</div>';
-                if (p.hits) {
-                    content += '<div>' + (p.points/p.hits).toFixed(2) + ' average rating</div>';
-                }
-                content += '<div><a href="/images/'+ site + '?mgrs=' + p.mgrs + '">see images</a></div>';
-                layer.bindPopup(content);
-            }
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
         }
 
         function loadGrid(site) {
@@ -94,23 +124,56 @@
                     style: featureStyle,
                     onEachFeature: onEachFeature
                 }).addTo(map);
+                map.fitBounds(geojson.getBounds());
              });
         }
 
         function load() {
-            map = L.map('map').setView([35.7963, -120.7447], 14);
+            map = L.map('map'); //.setView([35.7963, -120.7447], 14);
             L.tileLayer('http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-streets/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: 'Map &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://mapbox.com">MapBox</a>'
             }).addTo(map);
 
+            // control that shows state info on hover
+            info = L.control();
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+
+            info.update = function (props) {
+                var content = "";
+                if (props) {
+                    cell = props.image;
+                    if (cell) {
+                        content = '<h4>' + cell.mgrs + '</h4><div>'
+                            + cell.images + ' images</div><div>'
+                            + cell.hits + ' views</div>';
+                        if (cell.hits) {
+                            content += '<div>' + (cell.points/cell.hits).toFixed(2) + ' average rating</div>';
+                        }
+                    }
+                    this._div.innerHTML = content;
+                } else {
+                    this._div.innerHTML = "<h4>" + site + "</h4>"
+                                        + "<div>Hover over a grid square.</div>"
+                                        + "<div>Click to see images.</div>"
+                                        + '<div><a href="/">back</a></div>';
+                }
+            };
+
+            info.addTo(map);
+
             loadGrid(site);
-            //popup = L.popup();
-            //map.on('click', onMapClick);
         }
     </script>
 </head>
 <body onLoad="load()">
-    <div id="map"></div>
+    <div id="wrap">
+        <div id="map"></div>
+    </div>
 </body>
 </html>
