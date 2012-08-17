@@ -18,28 +18,20 @@
         var site = "20120815";
 
         function hsv_to_rgb (h, s, v) {
-            var r, g, b, f, p, q, t;
-            if( s == 0 ) {
-                // achromatic (grey)
-                r = g = b = v;
-                return;
+            if (s == 0.0) return [v, v, v]
+            var i = Math.floor(h*6.0);
+            var f = (h*6.0) - i;
+            var p = v*(1.0 - s);
+            var q = v*(1.0 - s*f);
+            var t = v*(1.0 - s*(1.0-f));
+            switch (i % 6) {
+                case 0: return [v, t, p];
+                case 1: return [q, v, p];
+                case 2: return [p, v, t];
+                case 3: return [p, q, v];
+                case 4: return [t, p, v];
+                case 5: return [v, p, q];
             }
-            h /= 60;            // sector 0 to 5
-            i = Math.floor( h );
-            f = h - i;          // factorial part of h
-            p = v * ( 1 - s );
-            q = v * ( 1 - s * f );
-            t = v * ( 1 - s * ( 1 - f ) );
-            switch( i ) {
-                case 0: r = v; g = t; b = p; break;
-                case 1: r = q; g = v; b = p; break;
-                case 2: r = p; g = v; b = t; break;
-                case 3: r = p; g = q; b = v; break;
-                case 4: r = t; g = p; b = v; break;
-                default:        // case 5:
-                        r = v; g = p; b = q; break;
-            }
-            return [r, g, b];
         }
 
         function featureStyle(feature) {
@@ -47,9 +39,9 @@
             var red, green, blue;
             if (cell.hits > 0) {
                 var score = cell.points / (cell.hits * 10);
-                // rgb = hsv_to_rgb(score * 120, 1.0, 1.0)
-                // red = rgb[0] * 255, green = rgb[1] * 255, blue = rgb[2] * 255
-                red = 255 * (1 - score); green = 255 - red; blue = 0;
+                rgb = hsv_to_rgb(score / 3, 1.0, 1.0)
+                red = rgb[0] * 255, green = rgb[1] * 255, blue = rgb[2] * 255
+                //red = 255 * (1 - score); green = 255 - red; blue = 0;
             } else {
                 red = green = blue = 225;
             }
