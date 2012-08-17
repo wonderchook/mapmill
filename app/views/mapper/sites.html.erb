@@ -9,7 +9,7 @@
 <div>
 	<a href="/images/<%= site.name %>"><%= site.name %></a> 
 	(<%= site.images.length %> images, <%= site.average %>/100 average, <%= site.percent_complete %> done)
-	 | <a href="/sort/<%= site.name %>">sort this site</a>
+        | <a href="/sort/<%= site.name %>">sort this site</a> | <a href="/grid/?<%= site.name %>">grid</a>
 <!--	 | <a href="/locate/site/<%= site.name %>">place this on a map</a>-->
 </div>
 <% end %>

@@ -3,10 +3,11 @@
 <% unless params[:filter] %><h2>Images from "<%= params[:site] %>"<% if params[:mgrs] %> in <%= params[:mgrs] %><% end %></h2><% end %>
 <% if params[:filter] == "unsorted" %><h2>Unsorted images from "<%= params[:site] %>"<% if params[:mgrs] %> in <%= params[:mgrs] %><% end %></h2><% end %>
 <p>
-	<i>Sorted best to worst</i> | 
-	<a href="/sort/<%= params[:site] %>">sort only this site</a> | 
-	<% unless params[:filter] %><a href="/images/<%= params[:site] %>/unsorted">view unsorted from this site</a><% end %>
-	<% if params[:filter] == "unsorted" %><a href="/images/<%= params[:site] %>">view all from this site</a><% end %> 
+	<i>Sorted worst to best</i> | 
+        <a href="/grid/?<%= params[:site] %>">grid</a> | 
+	<a href="/sort/<%= params[:site] %>">sort this site</a> | 
+	<% unless params[:filter] %><a href="/images/<%= params[:site] %>/unsorted">view unsorted</a><% end %>
+	<% if params[:filter] == "unsorted" %><a href="/images/<%= params[:site] %>">view all</a><% end %> 
 </p>
 <script>
 //http://willarson.com/code/sparklines/sparklines.html

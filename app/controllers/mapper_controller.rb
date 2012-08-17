@@ -20,6 +20,7 @@ class MapperController < ApplicationController
 				0
 			end
 		end
+                @images.reverse! # *worst* images first (sorry Jeff)
 		@images = @images.paginate :per_page => 20, :page => params[:page]
 		#@images.paginate :page => params[:page], :per_page => 21
 	end
