@@ -1,7 +1,7 @@
 <div id="site">
 <canvas style="margin-top:10px;height:120px;float:left;margin-right:10px;" id="bars"></canvas>
-<% unless params[:filter] %><h2>Images from "<%= params[:site] %>"</h2><% end %>
-<% if params[:filter] == "unsorted" %><h2>Unsorted images from "<%= params[:site] %>"</h2><% end %>
+<% unless params[:filter] %><h2>Images from "<%= params[:site] %>"<% if params[:mgrs] %> in <%= params[:mgrs] %><% end %></h2><% end %>
+<% if params[:filter] == "unsorted" %><h2>Unsorted images from "<%= params[:site] %>"<% if params[:mgrs] %> in <%= params[:mgrs] %><% end %></h2><% end %>
 <p>
 	<i>Sorted best to worst</i> | 
 	<a href="/sort/<%= params[:site] %>">sort only this site</a> | 

@@ -9,6 +9,7 @@ class MapperController < ApplicationController
 		# sort by the highest rating -- the ratio
 		images = @site.images unless params[:filter]
 		images = Image.find_all_by_site_id(@site.id, :conditions => {:hits=> 0, :points => 0}) if params[:filter] == "unsorted"
+                images = images.by_mgrs(params[:mgrs]) if params[:mgrs]
 		images.each do |i|
 			i.delete unless File.exist?("public/"+i.path)
 		end

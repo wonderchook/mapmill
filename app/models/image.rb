@@ -1,6 +1,7 @@
 class Image < ActiveRecord::Base
 
 	belongs_to :site
+        named_scope :by_mgrs, lambda {|mgrs| {:conditions => {:mgrs => mgrs}}}
 
 	def vote(key)
 		if key && self.site.unique_participant(key)
