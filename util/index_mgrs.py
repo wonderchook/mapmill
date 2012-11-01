@@ -8,7 +8,7 @@ def parse_gps_exif(tag):
     d, m, s = map(float, re.findall(r"\(([\d\.]+)\)", tag))
     return d + m / 60 + s / 3600
 
-def get_gps_coords(filename):
+def get_exif_coords(filename):
     ds = gdal.Open(filename)
     lat = ds.GetMetadataItem("EXIF_GPSLatitude")
     lon = ds.GetMetadataItem("EXIF_GPSLongitude")
@@ -16,6 +16,18 @@ def get_gps_coords(filename):
     lon_e = 1 if ds.GetMetadataItem("EXIF_GPSLongitudeRef") == "E" else -1
     return lon_e * parse_gps_exif(lon), \
            lat_n * parse_gps_exif(lat)
+
+
+def get_gps_coords(filename):
+    "AE00N41_721928W071_1493402012103000000000OL02_BU001002003.jpg"
+    match = re.findall(r'([NS])(\d\d)_(\d{6})([EW])(\d\d\d)_(\d{6})', filename)
+    if not match: return get_exif_coords(filename)
+    ns, lat, lat_dec, ew, lon, lon_dec = match[0]
+    ns = 1 if ns == 'N' else -1
+    ew = 1 if ew == 'E' else -1
+    lat = (float(lat) + float(lat_dec) / 1000000) * ns
+    lon = (float(lon) + float(lon_dec) / 1000000) * ew
+    return lon, lat
 
 _box_memo = {}
 def get_mgrs_box(cell):
@@ -48,10 +60,10 @@ if __name__ == "__main__":
     for dir in sys.argv[1:]:
         cells, files = {}, {}
         for filename in os.listdir(dir):
-            if not filename.endswith(".JPG"): continue
+            if not filename.lower().endswith(".jpg"): continue
             try:
                 lon, lat = get_gps_coords(os.path.join(dir, filename))
-                cell = m.toMGRS(lat, lon, MGRSPrecision=3)
+                cell = m.toMGRS(lat, lon, MGRSPrecision=2)
                 box = get_mgrs_box(cell)
             except TypeError:
                 print >>sys.stderr, "Can't read metadata from", dir + "/" + filename
