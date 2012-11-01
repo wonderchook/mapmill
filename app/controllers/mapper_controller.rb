@@ -53,7 +53,7 @@ class MapperController < ApplicationController
 		pool = @site.voted_less_than(5,5) # five images with less than 5 votes
 
 		@image = pool[((pool.length-1)*rand).to_i]
-		@image.thumb
+		@image.thumb unless @image.nil?
 		@sitename = @site.name
 		render "index"
 	end
