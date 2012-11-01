@@ -10,6 +10,8 @@
 	}
 </script>
 
+<% if @image %>
+
 <h2>Sort and select the best images to access damage after a disaster</h2>
 <p><i>It takes hours to go through the thousands of images the <a href="http://www.gocivilairpatrol.com/">Civil Air Patrol</a> collects and to pick out the best ones for inclusion in disaster assessments. Help us by choosing the best images.</i></p>
 
@@ -42,3 +44,9 @@ setInterval(function() {
 },10000)
 </script>
 </div>
+
+<% else %>
+
+    <div>There don't seem to be any images loaded. Go to the <a href="/admin">admin page</a>.</div>
+
+<% end %> <!-- if @image -->
