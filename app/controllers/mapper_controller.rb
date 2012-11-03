@@ -39,9 +39,8 @@ class MapperController < ApplicationController
 		pool = []
 		# this'll get expensive... try getting a random site?
 		Site.find(:all,:conditions => {:active => true}).each do |site|
-			pool = pool + site.voted_less_than(5,5) # five images with less than 5 votes
+			pool = pool + site.voted_less_than(500,50) # five images with less than 500 votes
 		end
-
 		@image = pool[((pool.length-1)*rand).to_i]
 		@image.thumb unless @image.nil?
 	end
@@ -53,7 +52,7 @@ class MapperController < ApplicationController
 		pool = @site.voted_less_than(5,5) # five images with less than 5 votes
 
 		@image = pool[((pool.length-1)*rand).to_i]
-		@image.thumb
+		@image.thumb unless @image.nil?
 		@sitename = @site.name
 		render "index"
 	end

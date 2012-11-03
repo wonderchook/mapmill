@@ -33,7 +33,7 @@ img { border:0; }
 	padding-left:8px;
 }
 
-#overlay {
+#overlay, #about {
 	position:absolute;
 	z-index:3;
 	width:50%;
@@ -44,15 +44,15 @@ img { border:0; }
 	font-size:0.9em;
 	color:white;
 	padding:20px;
-	text-align:center;
+	text-align:left;
 	top:16%;
 	left:25%;
 }
-#overlay .button {
+#overlay .button, #about .button {
 	padding:6px 10px 10px 10px;
 	background:#333;
 }
-#overlay a.button:hover {
+#overlay a.button:hover, #about a:.button:hover {
 	background:#222;
 }
 #expand, #embed, #extras {

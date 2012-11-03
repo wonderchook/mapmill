@@ -24,31 +24,32 @@ class Image < ActiveRecord::Base
 		require 'mini_magick'
 		thumb_path = 'public/fullsize_thumbnails/'+self.site.name
     		Dir.mkdir('public/fullsize_thumbnails') unless File.exists?('public/fullsize_thumbnails')
-		unless File.exists?(thumb_path+'/'+self.filename)
-			image = MiniMagick::Image.from_file('public/sites/'+self.site.name+"/"+self.filename)
-			image.crop "180x135+1500+1000"#+(image.width/2-90)+"+"+(image.height/2-60)
-			Dir.mkdir(thumb_path) unless File.exists?(thumb_path)
-			thumbnail = File.open(thumb_path+'/'+filename,"wb+")
-			image.write thumb_path+'/'+filename
-			thumbnail.close
-		end
+# 		unless File.exists?(thumb_path+'/'+self.filename)
+# 			image = MiniMagick::Image.from_file('public/sites/'+self.site.name+"/"+self.filename)
+# 			image.crop "180x135+1500+1000"#+(image.width/2-90)+"+"+(image.height/2-60)
+# 			Dir.mkdir(thumb_path) unless File.exists?(thumb_path)
+# 			thumbnail = File.open(thumb_path+'/'+filename,"wb+")
+# 			image.write thumb_path+'/'+filename
+# 			thumbnail.close
+# 		end
 		'/fullsize_thumbnails/'+self.site.name+'/'+filename
 	end
 	def thumb
 		require 'mini_magick'
 		thumb_path = 'public/thumbnails/'+self.site.name
-		unless File.exists?(thumb_path+'/'+self.filename)
-			image = MiniMagick::Image.open('public/sites/'+self.site.name+"/"+self.filename)
-			image.resize "180X120"
-			Dir.mkdir(thumb_path) unless File.exists?(thumb_path)
-			thumbnail = File.open(thumb_path+'/'+filename,"wb+")
-			image.write thumb_path+'/'+filename
-			thumbnail.close
-		end
+# 
+# 		unless File.exists?(thumb_path+'/'+self.filename)
+# 			image = MiniMagick::Image.open('public/sites/'+self.site.name+"/"+self.filename)
+# 			image.resize "180X120"
+# 			Dir.mkdir(thumb_path) unless File.exists?(thumb_path)
+# 			thumbnail = File.open(thumb_path+'/'+filename,"wb+")
+# 			image.write thumb_path+'/'+filename
+# 			thumbnail.close
+# 		end
 		'/thumbnails/'+self.site.name+'/'+filename
 	end
         def self.grid(site)
-          cells = self.all(:select=> "mgrs, avg(points) as points, sum(hits) as hits, count(*) as images, box",
+          cells = self.all(:select=> "mgrs, case when sum(hits) = 0 then 0.0 else 10.0-(sum(points)/sum(hits)::float) end as damage, sum(hits) as views, count(*) as images, box",
                            :group => "mgrs, box",
                            :conditions => { :site_id => site })
           cells.each {|cell| cell.box = JSON.parse(cell.box) if cell.box }

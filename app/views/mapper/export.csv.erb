@@ -1,9 +1,4 @@
 <%- headers = ["hits", "file_name", "path", "points"] -%>
 <%= CSV.generate_line headers %>
-<% for image in @images %>
-<%- row = [ image.hits,
-            image.filename,
-            image.path,
-            image.points] -%>
-<%=   CSV.generate_line row %>
+<% for image in @images %><%- row = [ image.hits, image.filename, image.path, image.points] -%><%=   CSV.generate_line row %>
 <%- end -%>
