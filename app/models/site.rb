@@ -38,7 +38,7 @@ class Site < ActiveRecord::Base
 	
 	def import_images
           # collate all .jpgs from each chosen site folder
-          path = RAILS_ROOT+'/public/sites/'+self.name)
+          path = RAILS_ROOT+'/public/sites/'+self.name
 	  json = File.read(path + "/" + "index.json") 
 	  metadata = JSON.parse(json)
           d = Dir.new(path)
