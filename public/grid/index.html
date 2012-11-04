@@ -68,8 +68,8 @@
         function featureStyle(feature) {
             var cell = feature.properties.image;
             var red, green, blue;
-            if (cell.hits > 0) {
-                var score = cell.points / (cell.hits * 10);
+            if (cell.views > 0) {
+                var score = 1.0 - (cell.damage / 10.0);
                 rgb = hsv_to_rgb(score / 3, 1.0, 1.0)
                 red = rgb[0] * 255, green = rgb[1] * 255, blue = rgb[2] * 255
                 //red = 255 * (1 - score); green = 255 - red; blue = 0;
@@ -151,9 +151,9 @@
                     if (cell) {
                         content = '<h4>' + cell.mgrs + '</h4><div>'
                             + cell.images + ' images</div><div>'
-                            + cell.hits + ' views</div>';
-                        if (cell.hits) {
-                            content += '<div>' + (cell.points/cell.hits).toFixed(2) + ' average rating</div>';
+                            + cell.views + ' views</div>';
+                        if (cell.views) {
+                            content += '<div>' + (cell.damage).toFixed(2) + ' average rating</div>';
                         }
                     }
                     this._div.innerHTML = content;

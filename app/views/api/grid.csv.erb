@@ -1,0 +1,7 @@
+<%- headers = ["mgrs", "images", "views", "damage"] -%>
+<%= headers.join "," %>
+<% for cell in @grid[:features] %><%-
+    row = [:mgrs, :images, :views, :damage].map{|x| cell[:properties][x]}
+    -%><%=
+        row.join "," %>
+<%- end -%>
