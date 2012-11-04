@@ -17,8 +17,11 @@ def get_exif_coords(filename):
         return None, None
     lat_n = 1 if ds.GetMetadataItem("EXIF_GPSLatitudeRef") == "N" else -1
     lon_e = 1 if ds.GetMetadataItem("EXIF_GPSLongitudeRef") == "E" else -1
-    return lon_e * parse_gps_exif(lon), \
-           lat_n * parse_gps_exif(lat)
+    try:
+        return lon_e * parse_gps_exif(lon), \
+               lat_n * parse_gps_exif(lat)
+    except:
+        return None, None
 
 
 def get_gps_coords(filename):
