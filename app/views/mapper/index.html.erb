@@ -1,6 +1,6 @@
 <div id="mainpage">
 
-<div id="overlay" style='display:none;'>
+<div id="overlay" style='display:none; text-align: left'>
 <script>
 	if (localStorage && localStorage.getItem('mapmill:overlay') && location.hash != "#slideshow") {
 		$('overlay').hide();
@@ -12,26 +12,46 @@
 
 <% if @image %>
 
-<h2>Sort and select the best images to access damage after a disaster</h2>
-<p><i>It takes hours to go through the thousands of images the <a href="http://www.gocivilairpatrol.com/">Civil Air Patrol</a> collects and to pick out the best ones for inclusion in disaster assessments. Help us by choosing the best images.</i></p>
+    <h3>Why</h3>
+    <div>Hurricane Sandy affected a huge area, and we need to accelerate the rate at which responders can assess damage. </div>
 
-<p>We want images that are show damage. Please rank the images if they contain no damage, some damage, or show complete destruction. The rest are not useful!</p>
+    <h3>What</h3>
+    <div>This tool uses crowdsourcing to provide an initial filter on imagery that has been collected from affected areas. Your work feeds into analysts who are supporting FEMA.</div>
 
-<p>(Keyboard shortcuts: 1 = ok, 2 = not ok, 3 = bad)</p>
-<p><a class='button' href="javascript:void(0);" onClick="$('overlay').toggle()">close</a></p>
+    <h3>How</h3>
+    <div>1. Look at a photograph and click on 'full resolution' if you want to see more detail. A detailed full resolution photo will open in a new browser window or tab.</div>
+    <div>2. Return to the first tab and rate the photo using the following damage scale:</div>
+    <ul>
+        <li><b>Green</b>: Light or No Damage: shingles or doors missing.</li>
+        <li><b>Yellow</b>: Moderate Damage: moderate to heavy damage to one or more structures, roads, and infrastructure. Some structures may be only lightly damaged.</li>
+        <li><b>Red</b>: Severe Damage: heavy damage to multiple structures, or if the area is still flooded.</li>
+    </ul>
+<p style="text-align:center"><a class='button' href="javascript:void(0);" onClick="$('overlay').toggle()">close</a></p>
 </div>
 
 
-<% unless params[:style] == "embed" %><a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>" id="expand">full resolution (<%= @image.hits %>)</a><% end %>
+<% unless params[:style] == "embed" %><a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>" id="expand">full resolution<!-- (<%= @image.hits %>) --></a><% end %>
+
+<!-- <link type="text/css" rel="stylesheet" href="/zoomy-plugin/zoomy.css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+<script type="text/javascript" src="/zoomy-plugin/jquery.zoomy.min.js"></script> -->
 
 <div id="image">
-<img src="/sites/<%= @image.site.name+"/"+@image.filename %>" />
+    <!-- <a href="/sites/<%= @image.site.name+"/"+@image.filename %>" class="zoom"> -->
+        <img src="/sites/<%= @image.site.name+"/"+@image.filename %>" />
+    <!-- </a> -->
 </div>
 
+<!-- <script type="text/javascript">
+    jQuery.noConflict()(function(){
+       $('.zoom').zoomy('mouseover');
+    });
+</script> -->
+
 <div id="buttons">
-	<a class="green"  href="/vote/<%= @image.id %>/10/<%= @sitename %>">ok</a>
-	<a class="yellow" href="/vote/<%= @image.id %>/5/<%= @sitename %>">not ok</a>
-	<a href="/vote/<%= @image.id %>/0/<%= @sitename %>">bad</a>
+	<a class="green"  href="/vote/<%= @image.id %>/10/<%= @sitename %>">light</a>
+	<a class="yellow" href="/vote/<%= @image.id %>/5/<%= @sitename %>">moderate</a>
+	<a href="/vote/<%= @image.id %>/0/<%= @sitename %>">heavy</a>
 </div>
 <script>
 var voted = false
@@ -44,9 +64,5 @@ setInterval(function() {
 },10000)
 </script>
 </div>
-
-<% else %>
-
-    <div>There don't seem to be any images loaded. Go to the <a href="/admin">admin page</a>.</div>
 
 <% end %> <!-- if @image -->

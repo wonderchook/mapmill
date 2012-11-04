@@ -18,7 +18,6 @@
   <div id="header">
 	<a href="/" style="padding-left:8px;">MapMill</a>: <small><i>Help the Civil Air Patrol Sort Images</i></small> 
 	<% unless params[:style] == "embed" %> | 
-	<a href="/">Home</a> | 
 	<a href="/sites">Sites</a> | 
         <% if @image && params[:controller] == "mapper" && (params[:action] == "index" || params[:action] == "sort") %>
             <a href='/images/<%= @image.site.name %>'>More images from <i><%= @image.site.name %></i></a> | 
@@ -29,9 +28,18 @@
 	<span class="links">
 		<a href='javascript:void(0);' onClick="$('overlay').toggle()">Help</a> 
 		<a href='javascript:void(0);' onClick="$('extras').toggle();">Extras</a> 
-		<a href='http://farm2.static.flickr.com/1276/4703515530_4482bc2f15_o.png'>Learn how</a> 
+		<a href='javascript:void(0);' onClick="$('about').toggle()">About</a> 
+                <!--<a href='http://farm2.static.flickr.com/1276/4703515530_4482bc2f15_o.png'>Learn how</a> -->
         </span>
   </div>
+  <div id="about" class="overlay" style="display:none;">
+      <h3>About this site</h3>
+      <p>This project is based on code from Jeffrey Warren of the Public Laboratory for Open Technology and Science called MapMill. It was modified by Kate Chapman and Schuyler Erle at the Camp Roberts/RELIEF field exploration in August 2012, in partnership with FEMA, the Civil Air Patrol, and the Readiness, Response, Recovery (R3) team from NGA that supports FEMA.</p>
+      <p>The software for this site is <a href="http://github.com/wonderchook/mapmill">Open Source</a>. If you have questions, please contact schuyler dot erle at hotosm dot org.</p>
+      <p><b>Pro tip</b>: This site supports keyboard shortcuts! Hit <b>1</b> for "light", <b>2</b> for "medium", <b>3</b> for "severe", and <b>0</b> to open the image in a new window.</p>
+    <p style="text-align:center"><a class='button' href="javascript:void(0);" onClick="$('about').toggle()">close</a></p>
+  </div>
+
   <div id="embed" class="overlay" style="display:none;">
 	<h3>Copy this code onto your blog or website to display a MapMill sorting box:</h3>
 	<textarea rows="4"><iframe border="0" src="http://mapmill.org/embed/<%= @embed || "" %>"></iframe></textarea>
