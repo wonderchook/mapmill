@@ -10,8 +10,11 @@ def parse_gps_exif(tag):
 
 def get_exif_coords(filename):
     ds = gdal.Open(filename)
+    if not ds: return None, None
     lat = ds.GetMetadataItem("EXIF_GPSLatitude")
     lon = ds.GetMetadataItem("EXIF_GPSLongitude")
+    if lat is None or lon is None:
+        return None, None
     lat_n = 1 if ds.GetMetadataItem("EXIF_GPSLatitudeRef") == "N" else -1
     lon_e = 1 if ds.GetMetadataItem("EXIF_GPSLongitudeRef") == "E" else -1
     return lon_e * parse_gps_exif(lon), \
@@ -61,12 +64,18 @@ if __name__ == "__main__":
         cells, files = {}, {}
         for filename in os.listdir(dir):
             if not filename.lower().endswith(".jpg"): continue
-            try:
-                lon, lat = get_gps_coords(os.path.join(dir, filename))
-                cell = m.toMGRS(lat, lon, MGRSPrecision=2)
-                box = get_mgrs_box(cell)
-            except TypeError:
-                print >>sys.stderr, "Can't read metadata from", dir + "/" + filename
+            embedded_mgrs = re.findall(r"^\w+_(\d\d[A-Z]{3}\d{4}).\w+$", filename)
+            if embedded_mgrs:
+                cell = embedded_mgrs[0]
+            else:
+                try:
+                    lon, lat = get_gps_coords(os.path.join(dir, filename))
+                    if lon is None or lat is None: raise TypeError("no GPS data")
+                    cell = m.toMGRS(lat, lon, MGRSPrecision=2)
+                except TypeError:
+                    #print >>sys.stderr, "Can't read metadata from", dir + "/" + filename
+                    continue
+            box = get_mgrs_box(cell)
             files[filename] = {"lon": lon, "lat": lat, "mgrs": cell, "box": box}
         idx = file(os.path.join(dir, "index.json"), "w")
         json.dump(files, idx, indent=2)
