@@ -50,7 +50,7 @@ class MapperController < ApplicationController
 		@site = Site.find_by_name(params[:site])
 		pool = []
 		# this'll get expensive... try getting a random site?
-		pool = @site.voted_less_than(5,5) # five images with less than 5 votes
+		pool = @site.voted_less_than(50,100) # 100 images with less than 50 votes
 
 		@image = pool[((pool.length-1)*rand).to_i]
 		@image.thumb unless @image.nil?
