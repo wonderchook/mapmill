@@ -37,28 +37,32 @@ class Site < ActiveRecord::Base
 	# but does not generate thumbnails ... that might lead to thousands generating at once
 	
 	def import_images
-  		# collate all .jpgs from each chosen site folder
-  		d = Dir.new(RAILS_ROOT+'/public/sites/'+self.name)
-  		d.each do |image|
-  			if image[-3..-1] && image[-3..-1].downcase == 'jpg'
-  				unless Image.find_by_path("sites/"+name+"/"+image)
-  				  image_metadata = get_metadata(image,RAILS_ROOT+'/public/sites/'+self.name)
-                                  unless image_metadata.nil?
-  					i = Image.new({:path => "sites/"+name+"/"+image,:filename => image.split('/').last,:site_id => self.id, :lat => image_metadata["lat"],:lon => image_metadata["lon"], :mgrs =>image_metadata["mgrs"],:box =>image_metadata["box"].to_json})    
-  					i.save
-                                  end
-  				end
-  			end
-  		end
+          # collate all .jpgs from each chosen site folder
+          path = RAILS_ROOT+'/public/sites/'+self.name)
+	  json = File.read(path + "/" + "index.json") 
+	  metadata = JSON.parse(json)
+          d = Dir.new(path)
+          d.each do |image|
+              if image[-3..-1] && image[-3..-1].downcase == 'jpg'
+                  unless Image.find_by_path("sites/"+name+"/"+image)
+                    image_metadata = metadata[image]
+                    unless image_metadata.nil?
+                      i = Image.new({
+                        :path => "sites/"+name+"/"+image,
+                        :filename => image.split('/').last,
+                        :site_id => self.id, 
+                        :lat => image_metadata["lat"],
+                        :lon => image_metadata["lon"], 
+                        :mgrs =>image_metadata["mgrs"],
+                        :box =>image_metadata["box"].to_json
+                      })
+                      i.save
+                    end
+                  end
+              end
+          end
   	end
   	
-	
-	def get_metadata(file_name,path)
-	  json = File.read(path + "/" + "index.json") 
-	  file_metadata = JSON.parse(json)
-	  file_metadata[file_name]
-	end
-
 	# returns _num_ images, starting with those with fewest votes
 	def least_voted(num)
 		Image.find(:all,:conditions => {:site_id => self.id},:order => "hits", :limit => num)
