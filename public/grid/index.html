@@ -153,7 +153,7 @@
                             + cell.images + ' images</div><div>'
                             + cell.views + ' views</div>';
                         if (cell.views) {
-                            content += '<div>' + (cell.damage).toFixed(2) + ' average rating</div>';
+                            content += '<div>' + parseFloat(cell.damage).toFixed(2) + ' average rating</div>';
                         }
                     }
                     this._div.innerHTML = content;
@@ -167,7 +167,7 @@
 
             info.addTo(map);
 
-            loadGrid(site);
+            loadGrid("static/"+site);
         }
     </script>
 </head>
