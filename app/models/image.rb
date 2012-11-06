@@ -1,3 +1,7 @@
+PRECISION=100000.0
+def round_to(value)
+  (value.to_f*PRECISION).round.to_f / PRECISION
+end
 class Image < ActiveRecord::Base
 
 	belongs_to :site
@@ -52,7 +56,13 @@ class Image < ActiveRecord::Base
           cells = self.all(:select=> "mgrs, case when sum(hits) = 0 then 0.0 else 10.0-(sum(points)/sum(hits)::float) end as damage, sum(hits) as views, count(*) as images, box",
                            :group => "mgrs, box",
                            :conditions => { :site_id => site })
-          cells.each {|cell| cell.box = JSON.parse(cell.box) if cell.box }
+          cells.each do |cell|
+            if cell.box
+              cell.box = JSON.parse(cell.box)
+              cell.box.map! {|coords| coords.map! {|value| round_to(value)}}
+              cell.damage = round_to(cell.damage)
+            end
+          end
           cells
         end
 end
