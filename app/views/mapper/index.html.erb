@@ -1,3 +1,7 @@
+<style type="text/css">
+    body { overflow: hidden; }
+</style>
+
 <div id="mainpage">
 
 <div id="overlay" style='display:none; text-align: left'>
@@ -19,7 +23,7 @@
     <div>This tool uses crowdsourcing to provide an initial filter on imagery that has been collected from affected areas. Your work feeds into analysts who are supporting FEMA.</div>
 
     <h3>How</h3>
-    <div>1. Look at a photograph and click on 'full resolution' if you want to see more detail. A detailed full resolution photo will open in a new browser window or tab.</div>
+    <div>1. Have a look at each image with the magnifying glass, and see if you can find any obvious flooding, building damage, or debris. <!-- You can click on the image to turn the magnifying glass on and off.--></div>
     <div>2. Return to the first tab and rate the photo using the following damage scale:</div>
     <ul>
         <li><b>Green</b>: Light or No Damage: shingles or doors missing.</li>
@@ -30,7 +34,16 @@
 </div>
 
 
-<% unless params[:style] == "embed" %><a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>" id="expand">full resolution<!-- (<%= @image.hits %>) --></a><% end %>
+<% unless params[:style] == "embed" %>
+<div id="expand">
+    <!--
+    <div>Click to toggle the magnifying glass,
+    or view at
+        <a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>">full resolution<!-- (<%= @image.hits %>) --></a>.</div>
+    -->
+    <a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>">full resolution<!-- (<%= @image.hits %>) --></a>.
+</div>
+<% end %>
 
 <div id="image">
     <img id="mainimage" src="/sites/<%= @image.site.name+"/"+@image.filename %>" />

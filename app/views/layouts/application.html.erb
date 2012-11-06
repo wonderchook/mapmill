@@ -15,7 +15,7 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script type="text/javascript" src="/javascripts/jquery.loupe.min.js"></script>
-></script>
+</script>
 
   <script>
     // No conflict mode: JQuery play nice with Prototype
@@ -23,7 +23,7 @@
 
     // Zoom main image with JQuery Loupe
     jQuery(document).ready(function(){
-      jQuery("#mainimage").loupe();
+        jQuery("#mainimage").loupe({loupe: "loupe", width: 200, height: 200});
     });
   </script>
 
@@ -41,8 +41,8 @@
 	<% end %>
 
 	<span class="links">
-		<a href='javascript:void(0);' onClick="$('overlay').toggle()">Help</a> 
-		<a href='javascript:void(0);' onClick="$('extras').toggle();">Extras</a> 
+                <a href='javascript:void(0);' onClick="$('overlay').toggle()"><b>Instructions</b></a> 
+                <!-- <a href='javascript:void(0);' onClick="$('extras').toggle();">Extras</a>  -->
 		<a href='javascript:void(0);' onClick="$('about').toggle()">About</a> 
                 <!--<a href='http://farm2.static.flickr.com/1276/4703515530_4482bc2f15_o.png'>Learn how</a> -->
         </span>
