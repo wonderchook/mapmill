@@ -32,21 +32,9 @@
 
 <% unless params[:style] == "embed" %><a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>" id="expand">full resolution<!-- (<%= @image.hits %>) --></a><% end %>
 
-<!-- <link type="text/css" rel="stylesheet" href="/zoomy-plugin/zoomy.css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-<script type="text/javascript" src="/zoomy-plugin/jquery.zoomy.min.js"></script> -->
-
 <div id="image">
-    <!-- <a href="/sites/<%= @image.site.name+"/"+@image.filename %>" class="zoom"> -->
-        <img src="/sites/<%= @image.site.name+"/"+@image.filename %>" />
-    <!-- </a> -->
+    <img id="mainimage" src="/sites/<%= @image.site.name+"/"+@image.filename %>" />
 </div>
-
-<!-- <script type="text/javascript">
-    jQuery.noConflict()(function(){
-       $('.zoom').zoomy('mouseover');
-    });
-</script> -->
 
 <div id="buttons">
 	<a class="green"  href="/vote/<%= @image.id %>/10/<%= @sitename %>">light</a>
