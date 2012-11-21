@@ -14,8 +14,8 @@
 
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/jquery.loupe.min.js"></script>
-</script>
+  <script type="text/javascript" src="/javascripts/jquery.loupe.js"></script>
+></script>
 
   <script>
     // No conflict mode: JQuery play nice with Prototype
@@ -23,7 +23,17 @@
 
     // Zoom main image with JQuery Loupe
     jQuery(document).ready(function(){
-        jQuery("#mainimage").loupe({loupe: "loupe", width: 200, height: 200});
+
+      jQuery("#mainimage").loupe();
+
+      // Hide on click
+      jQuery("#mainimage").click(function(){
+        jQuery(this).removeClass('no-loupe');
+      });
+      jQuery(".loupe").click(function(){
+        jQuery("#mainimage").addClass('no-loupe');
+      });
+
     });
   </script>
 
