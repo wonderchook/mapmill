@@ -36,14 +36,15 @@ class MapperController < ApplicationController
 	# currently collects 5 lowest vote-count images from each site,
 	# removing thumb dirs, from the end of the list, alphabetically? dumb.
 	def index
-		pool = []
-		# this'll get expensive... try getting a random site?
-		Site.find(:all,:conditions => {:active => true}).each do |site|
-			pool = pool + site.voted_less_than(5,5) # five images with less than 5 votes
-		end
-
-		@image = pool[((pool.length-1)*rand).to_i]
-		@image.thumb unless @image.nil?
+          # this'll get expensive... try getting a random site?	
+          cond = {:active => true}
+          cond[:name] = params[:site] unless params[:site].nil?
+          logger.warn cond
+          sites = Site.find(:all, :conditions => cond)
+          logger.warn sites
+          @image = Image.find(:first, :conditions => {:site_id => sites}, :order => "hits")
+          @vote = params[:ui] != "" ? "/#{params[:ui]}/#{params[:site]}/vote" : "/vote"
+          @image.thumb unless @image.nil?
 	end
 
 	def sort
@@ -55,24 +56,26 @@ class MapperController < ApplicationController
 		@image = pool[((pool.length-1)*rand).to_i]
 		@image.thumb unless @image.nil?
 		@sitename = @site.name
+                @vote = "/sort/#{@sitename}/vote"
 		render "index"
 	end
 
 	def vote
-		if i = Image.find(params[:id])
-			i.points += params[:points].to_i if params[:points].to_i < 11
-			i.vote(params[:mapmill_id])
-		end
-		if params[:site] != ""
-			path = '/sort/'+params[:site]+'/?o=x&last='+i.path
-		else
-			path = '/?o=x&last='+i.path
-		end
-		if  params[:ajax]
-			render :text => "success"
-		else
-			redirect_to path 
-		end
+              if i = Image.find(params[:id])
+                      i.points += params[:points].to_i if params[:points].to_i < 11
+                      i.vote(params[:mapmill_id])
+              end
+              if params[:ui] != ""
+                path = "/" + params[:ui] + "/" + params[:site] + "/"
+              else
+                path = "/"
+              end
+              path += '?o=x&last='+i.path 
+              if  params[:ajax]
+                      render :text => "success"
+              else
+                      redirect_to path 
+              end
 	end
 	
 	

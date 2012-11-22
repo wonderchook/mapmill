@@ -23,7 +23,7 @@
     <div>This tool uses crowdsourcing to provide an initial filter on imagery that has been collected from affected areas. Your work feeds into analysts who are supporting FEMA.</div>
 
     <h3>How</h3>
-    <div>1. Have a look at each image with the magnifying glass, and see if you can find any obvious flooding, building damage, or debris. <!-- You can click on the image to turn the magnifying glass on and off.--></div>
+    <div>1. Have a look at each image with the magnifying glass, and see if you can find any obvious flooding, building damage, or debris. You can click on the image to turn the magnifying glass on and off.</div>
     <div>2. Return to the first tab and rate the photo using the following damage scale:</div>
     <ul>
         <li><b>Green</b>: Light or No Damage: shingles or doors missing.</li>
@@ -34,29 +34,29 @@
 </div>
 
 
+<!--
 <% unless params[:style] == "embed" %>
 <div id="expand">
     <div>Click to turn the <br />magnifying glass on and off.</div>
-<!--
     <a target="_blank" href="/sites/<%= @image.site.name+"/"+@image.filename %>">full resolution<!- (<%= @image.hits %>) -></a>
--->
 </div>
 <% end %>
+-->
 
 <div id="image">
     <img id="mainimage" src="/sites/<%= @image.site.name+"/"+@image.filename %>" />
 </div>
 
 <div id="buttons">
-	<a class="green"  href="/vote/<%= @image.id %>/10/<%= @sitename %>">light</a>
-	<a class="yellow" href="/vote/<%= @image.id %>/5/<%= @sitename %>">moderate</a>
-	<a href="/vote/<%= @image.id %>/0/<%= @sitename %>">heavy</a>
+    <a class="green"  href="<%= @vote %>/<%= @image.id %>/10/">light</a>
+    <a class="yellow" href="<%= @vote %>/<%= @image.id %>/5/">moderate</a>
+    <a class="red" href="<%= @vote %>/<%= @image.id %>/0/">heavy</a>
 </div>
 <script>
 var voted = false
-shortcut.add("1",function() { if (!voted) { window.location = "/vote/<%= @image.id %>/10/<%= @sitename %>?mapmill_id="+mapmill_id; voted = true; }});
-shortcut.add("2",function() { if (!voted) { window.location = "/vote/<%= @image.id %>/5/<%= @sitename %>?mapmill_id="+mapmill_id; voted = true; }});
-shortcut.add("3",function() { if (!voted) { window.location = "/vote/<%= @image.id %>/0/<%= @sitename %>?mapmill_id="+mapmill_id; voted = true; }});
+shortcut.add("1",function() { if (!voted) { window.location = "<%= @vote %>/<%= @image.id %>/10/?mapmill_id="+mapmill_id; voted = true; }});
+shortcut.add("2",function() { if (!voted) { window.location = "<%= @vote %>/<%= @image.id %>/5/?mapmill_id="+mapmill_id; voted = true; }});
+shortcut.add("3",function() { if (!voted) { window.location = "<%= @vote %>/<%= @image.id %>/0/?mapmill_id="+mapmill_id; voted = true; }});
 
 setInterval(function() {
 	if (location.hash == "#slideshow") window.location.reload();
