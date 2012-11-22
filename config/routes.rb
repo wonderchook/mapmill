@@ -15,12 +15,13 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => "mapper", :ui => ""
   map.connect 'vote/:id/:points', :controller => 'mapper', :action => 'vote', :site => "", :ui => ""
 
-  map.connect 'sort/:site', :controller => 'mapper', :action => 'sort', :ui => "sort"
+  map.connect 'sort/:site', :controller => 'mapper', :action => 'sort'
   map.connect 'sort/:site/vote/:id/:points', :controller => 'mapper', :action => 'vote', :ui => "sort"
 
-  map.connect 'review/:site', :controller => 'mapper', :action => 'index', :ui => "review"
+  map.connect 'review/:site', :controller => 'mapper', :action => 'review'
   map.connect 'review/:site/vote/:id/:points', :controller => 'mapper', :action => 'vote', :ui => "review"
 
+  map.connect 'signin/:site', :controller => "mapper", :action => "signin"
   
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

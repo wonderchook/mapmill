@@ -25,7 +25,6 @@ class MapperController < ApplicationController
 		#@images.paginate :page => params[:page], :per_page => 21
 	end
 	
-	
 	def export
 	  @site = Site.find_by_name(params[:site])
 	  images = @site.images unless params[:filter]
@@ -33,17 +32,21 @@ class MapperController < ApplicationController
           @images = images
 	end
 
-	# currently collects 5 lowest vote-count images from each site,
-	# removing thumb dirs, from the end of the list, alphabetically? dumb.
+        def review
+          if session[:email].nil?
+            redirect_to '/signin/' + params[:site]
+          else
+            index
+            render "index"
+          end
+        end
+
 	def index
-          # this'll get expensive... try getting a random site?	
           cond = {:active => true}
           cond[:name] = params[:site] unless params[:site].nil?
-          logger.warn cond
           sites = Site.find(:all, :conditions => cond)
-          logger.warn sites
           @image = Image.find(:first, :conditions => {:site_id => sites}, :order => "hits")
-          @vote = params[:ui] != "" ? "/#{params[:ui]}/#{params[:site]}/vote" : "/vote"
+          @vote = params[:action] != "index" ? "/#{params[:action]}/#{params[:site]}/vote" : "/vote"
           @image.thumb unless @image.nil?
 	end
 
@@ -65,6 +68,7 @@ class MapperController < ApplicationController
                       i.points += params[:points].to_i if params[:points].to_i < 11
                       i.vote(params[:mapmill_id])
               end
+              logger.info "Email: #{session[:email]}" if session[:email]
               if params[:ui] != ""
                 path = "/" + params[:ui] + "/" + params[:site] + "/"
               else
@@ -108,4 +112,12 @@ class MapperController < ApplicationController
 		redirect_to image.fullsize_thumb
 	end
 
+        def signin
+          if params[:email] and params[:email] != ''
+            session[:email] = params[:email]
+            redirect_to '/review/' + params[:site]
+          else
+            render "signin"
+          end
+        end
 end
