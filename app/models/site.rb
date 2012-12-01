@@ -41,25 +41,25 @@ class Site < ActiveRecord::Base
           path = RAILS_ROOT+'/public/sites/'+self.name
 	  json = File.read(path + "/" + "index.json") 
 	  metadata = JSON.parse(json)
-          d = Dir.new(path)
-          d.each do |image|
-              if image[-3..-1] && image[-3..-1].downcase == 'jpg'
-                  unless Image.find_by_path("sites/"+name+"/"+image)
-                    image_metadata = metadata[image]
-                    unless image_metadata.nil?
-                      i = Image.new({
-                        :path => "sites/"+name+"/"+image,
-                        :filename => image.split('/').last,
-                        :site_id => self.id, 
-                        :lat => image_metadata["lat"],
-                        :lon => image_metadata["lon"], 
-                        :mgrs =>image_metadata["mgrs"],
-                        :box =>image_metadata["box"].to_json
-                      })
-                      i.save
-                    end
-                  end
+          metadata.each do |image, image_metadata|
+            if image[-3..-1] && image[-3..-1].downcase == 'jpg'
+              path = image.start_with?("http") ? image : "sites/#{name}/#{image}"
+              unless Image.find_by_path(path)
+                i = Image.new({
+                  :path => path,
+                  :filename => image.split('/').last,
+                  :site_id => self.id, 
+                  :lat => image_metadata["lat"],
+                  :lon => image_metadata["lon"], 
+                  :mgrs =>image_metadata["mgrs"],
+                  :collection => image_metadata["collection"],
+                  :captured_at => image_metadata["captured_at"],
+                  :thumbnail => image_metadata["thumbnail"],
+                  :box =>image_metadata["box"].to_json
+                })
+                i.save
               end
+            end
           end
   	end
   	

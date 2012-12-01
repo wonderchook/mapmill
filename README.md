@@ -29,6 +29,7 @@ by Jeff Warren for aerial image quality evaluation.
     geokit
     will_paginate
     json
+    rdoc
 
 ## Setup ##
 

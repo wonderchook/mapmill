@@ -17,17 +17,18 @@ class Image < ActiveRecord::Base
 	end
 
 	def sitename
-		self.path.split("/")[1]
+		self.path.split("/")[2]
 	end
 
-	def filename
-		self.path.split("/").last
-	end
+	#def filename
+	#	self.path.split("/").last
+	#end
 
 	def fullsize_thumb
-		require 'mini_magick'
+                return thumbnail if thumbnail
 		thumb_path = 'public/fullsize_thumbnails/'+self.site.name
     		Dir.mkdir('public/fullsize_thumbnails') unless File.exists?('public/fullsize_thumbnails')
+#		require 'mini_magick'
 # 		unless File.exists?(thumb_path+'/'+self.filename)
 # 			image = MiniMagick::Image.from_file('public/sites/'+self.site.name+"/"+self.filename)
 # 			image.crop "180x135+1500+1000"#+(image.width/2-90)+"+"+(image.height/2-60)
@@ -39,9 +40,9 @@ class Image < ActiveRecord::Base
 		'/fullsize_thumbnails/'+self.site.name+'/'+filename
 	end
 	def thumb
-		require 'mini_magick'
+                return thumbnail if thumbnail
 		thumb_path = 'public/thumbnails/'+self.site.name
-# 
+#               require 'mini_magick'
 # 		unless File.exists?(thumb_path+'/'+self.filename)
 # 			image = MiniMagick::Image.open('public/sites/'+self.site.name+"/"+self.filename)
 # 			image.resize "180X120"

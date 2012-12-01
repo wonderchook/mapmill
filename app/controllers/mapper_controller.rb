@@ -11,7 +11,7 @@ class MapperController < ApplicationController
 		images = Image.find_all_by_site_id(@site.id, :conditions => {:hits=> 0, :points => 0}) if params[:filter] == "unsorted"
                 images = images.by_mgrs(params[:mgrs]) if params[:mgrs]
 		images.each do |i|
-			i.delete unless File.exist?("public/"+i.path)
+                    i.delete unless File.exist?("public/"+i.path) or i.path.start_with? "http"
 		end
 		@images = images.sort_by do |i|
 			if (i.hits > 0)
@@ -74,7 +74,7 @@ class MapperController < ApplicationController
               else
                 path = "/"
               end
-              path += '?o=x&last='+i.path 
+              path += '?o=x&last='+i.id
               if  params[:ajax]
                       render :text => "success"
               else
