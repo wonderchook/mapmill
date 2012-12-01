@@ -34,8 +34,27 @@ by Jeff Warren for aerial image quality evaluation.
 ## Setup ##
 
 * Add new directories of images to /public/sites. 
-* Run util/index_mgrs.py on the new directory to add the georeferencing. Read
+* Run `util/index_mgrs.py` on the new directory to add the georeferencing. Read
 util/README to learn how to get that to work.
-* Go to http://<server>:3000/admin and create the new site in the database.
-* Thumbnails are generated and dropped in matching 'foo_thumb' folders.
+* Go to http://[server]:3000/admin and create the new site in the database.
+* Thumbnails are generated and dropped in matching `foo_thumb` folders.
 
+## Credits & License ##
+
+This software was originally written by Jeff Warren, and extensively adapted by
+Kate Chapman and Schuyler Erle. Additional contributions were made by Ka-Ping
+Yee and Michael Lascarides.
+
+This software is Copyright 2010 Jeffrey Warren.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
