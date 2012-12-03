@@ -20,6 +20,14 @@ class Image < ActiveRecord::Base
 		self.path.split("/")[2]
 	end
 
+        def url
+          if path.start_with? "http" or path.start_with "/"
+            path
+          else
+            "/" + path
+          end
+        end
+
 	#def filename
 	#	self.path.split("/").last
 	#end
