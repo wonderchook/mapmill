@@ -1,42 +1,28 @@
-from osgeo import gdal, osr
-import re, mgrs, json
+from osgeo import ogr, osr
+import re, mgrs, json, sys
 
 wgs84 = osr.SpatialReference()
 wgs84.SetWellKnownGeogCS("EPSG:4326")
 
-def parse_gps_exif(tag):
-    d, m, s = map(float, re.findall(r"\(([\d\.]+)\)", tag))
-    return d + m / 60 + s / 3600
-
-def get_exif_coords(filename):
-    ds = gdal.Open(filename)
-    if not ds: return None, None
-    lat = ds.GetMetadataItem("EXIF_GPSLatitude")
-    lon = ds.GetMetadataItem("EXIF_GPSLongitude")
-    if lat is None or lon is None:
-        return None, None
-    lat_n = 1 if ds.GetMetadataItem("EXIF_GPSLatitudeRef") == "N" else -1
-    lon_e = 1 if ds.GetMetadataItem("EXIF_GPSLongitudeRef") == "E" else -1
-    try:
-        return lon_e * parse_gps_exif(lon), \
-               lat_n * parse_gps_exif(lat)
-    except:
-        return None, None
-
-
-def get_gps_coords(filename):
-    "AE00N41_721928W071_1493402012103000000000OL02_BU001002003.jpg"
-    match = re.findall(r'([NS])(\d\d)_(\d{6})([EW])(\d\d\d)_(\d{6})', filename)
-    if not match: return get_exif_coords(filename)
-    ns, lat, lat_dec, ew, lon, lon_dec = match[0]
-    ns = 1 if ns == 'N' else -1
-    ew = 1 if ew == 'E' else -1
-    lat = (float(lat) + float(lat_dec) / 1000000) * ns
-    lon = (float(lon) + float(lon_dec) / 1000000) * ew
-    return lon, lat
+def get_fields_as_dict(layer, key_field='Name', rename_map={
+    'Latitude': 'lat', 'Longitude': 'lon', 'URL': 'url',
+    'Folder': 'collection', 'Thumb': 'thumbnail', 'ImageCaptu': 'captured_at'
+}):
+    """Given an OGR layer, builds a dictionary containing the fields for each
+    feature.  In each dictionary item, the key is the specified key_field and
+    the value is a dictionary containing the rest of the fields, optionally
+    renamed according to the given rename_map."""
+    results = {}
+    for i in range(layer.GetFeatureCount()):
+        feature = layer.GetFeature(i)
+        value = dict((rename_map.get(field, field), feature.GetField(field))
+                     for field in feature.keys())
+        results[value.pop(key_field)] = value
+    return results
 
 _box_memo = {}
 def get_mgrs_box(cell):
+    """Given an MGRS string, returns the 5-point box for the MGRS cell."""
     if cell in _box_memo: return _box_memo[cell]
     m = mgrs.MGRS()
     lat, lon = m.toLatLon(cell)
@@ -60,25 +46,30 @@ def get_mgrs_box(cell):
     _box_memo[cell] = tuple(corners)
     return _box_memo[cell]
 
-if __name__ == "__main__":
-    import sys, os
-    m = mgrs.MGRS()
-    for dir in sys.argv[1:]:
-        cells, files = {}, {}
-        for filename in os.listdir(dir):
-            if not filename.lower().endswith(".jpg"): continue
-            embedded_mgrs = re.findall(r"^\w+_(\d\d[A-Z]{3}\d{4}).\w+$", filename)
-            if embedded_mgrs:
-                cell = embedded_mgrs[0]
-            else:
-                try:
-                    lon, lat = get_gps_coords(os.path.join(dir, filename))
-                    if lon is None or lat is None: raise TypeError("no GPS data")
-                    cell = m.toMGRS(lat, lon, MGRSPrecision=2)
-                except TypeError:
-                    #print >>sys.stderr, "Can't read metadata from", dir + "/" + filename
-                    continue
-            box = get_mgrs_box(cell)
-            files[filename] = {"lon": lon, "lat": lat, "mgrs": cell, "box": box}
-        idx = file(os.path.join(dir, "index.json"), "w")
-        json.dump(files, idx, indent=2)
+def add_mgrs_coords(feature_dicts):
+    """Given a list of dictionaries, takes the 'lat' and 'lon' values
+    in each dictionary, converts them to MGRS, and deposits the MGRS string
+    in 'mgrs' and the 5-point closed polyline for the MGRS cell in 'box'."""
+    to_mgrs = mgrs.MGRS().toMGRS
+    for feature_dict in feature_dicts:
+        lat, lon = feature_dict['lat'], feature_dict['lon']
+        cell = to_mgrs(lat, lon, MGRSPrecision=2)
+        feature_dict['mgrs'] = cell
+        feature_dict['box'] = get_mgrs_box(cell)
+
+def shapefile_to_json(shp_filename, json_filename):
+    # Need to hold data_source ref; see http://trac.osgeo.org/gdal/ticket/4914
+    data_source = ogr.Open(shp_filename)
+    layer = data_source.GetLayer()
+    feature_dicts = get_fields_as_dict(layer)
+    add_mgrs_coords(feature_dicts.values())
+    output = open(json_filename, 'w')
+    json.dump(feature_dicts, output, indent=2)
+    output.close()
+
+if __name__ == '__main__':
+    args = sys.argv[1:]
+    if len(args) == 2:
+        shapefile_to_json(args[0], args[1])
+    else:
+        raise SystemExit('Usage: %s <infile.shp> <outfile.json>' % sys.argv[0])
