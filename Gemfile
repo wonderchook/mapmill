@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+gem "rails", "2.3.5"
+gem "activerecord-postgresql-adapter"
+gem "geokit"
+gem "will_paginate"
+gem "json"
+gem "rdoc"
