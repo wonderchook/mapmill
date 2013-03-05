@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304115700) do
+ActiveRecord::Schema.define(:version => 20130304232300) do
 
   create_table "images", :force => true do |t|
     t.integer  "hits",        :default => 0,   :null => false
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20130304115700) do
     t.datetime "captured_at"
   end
 
+  add_index "images", ["hits"], :name => "index_images_on_hits"
   add_index "images", ["path"], :name => "index_images_on_path", :unique => true
 
   create_table "participants", :force => true do |t|
