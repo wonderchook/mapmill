@@ -64,23 +64,24 @@ class MapperController < ApplicationController
 	end
 
 	def vote
-              if i = Image.find(params[:id])
-                      i.points += params[:points].to_i if params[:points].to_i < 11
-                      i.vote(params[:mapmill_id])
-              end
-              logger.info "Email: #{session[:email]}" if session[:email]
-              if params[:ui] != ""
-                path = "/" + params[:ui] + "/" + params[:site] + "/"
-              else
-                path = "/"
-              end
-              path += '?o=x&last='+i.id
-              if  params[:ajax]
-                      render :text => "success"
-              else
-                      redirect_to path 
-              end
-	end
+          if i = Image.find(params[:id])
+            points = params[:points].to_i
+            i.points += points if points.to_i < 11
+            i.vote(params[:mapmill_id], points)
+          end
+          logger.info "Email: #{session[:email]}" if session[:email]
+          if params[:ui] != ""
+            path = "/" + params[:ui] + "/" + params[:site] + "/"
+          else
+            path = "/"
+          end
+          path += '?o=x&last='+i.id
+          if  params[:ajax]
+                  render :text => "success"
+          else
+                  redirect_to path 
+          end
+        end
 	
 	
 	def save_site_location

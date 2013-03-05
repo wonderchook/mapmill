@@ -111,7 +111,12 @@ class Site < ActiveRecord::Base
 	end
 
 	def unique_participant(key)
-		!Participant.find_by_key(key,:conditions => {:site_id => self.id})
+            p = Participant.find_by_key(key,:conditions => {:site_id => self.id})
+            unless p
+              p = Participant.new(:key => key,:site_id => self.id)
+              p.save
+            end
+            p
 	end
 
 	def vote_bars

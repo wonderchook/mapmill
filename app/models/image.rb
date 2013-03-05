@@ -7,13 +7,13 @@ class Image < ActiveRecord::Base
 	belongs_to :site
         named_scope :by_mgrs, lambda {|mgrs| {:conditions => {:mgrs => mgrs}}}
 
-	def vote(key)
-		if key && self.site.unique_participant(key)
-			p = Participant.new({:key => key,:site_id => self.site_id}) 
-			p.save
-		end
-		self.hits += 1
-		self.save
+	def vote(key, rating)
+          participant_id = nil
+          p = self.site.unique_participant(key)
+          Vote.create!(:participant_id => p.id, :image_id => self.id,
+                       :email => session[:email], :rating => rating)
+          self.hits += 1
+          self.save
 	end
 
 	def sitename

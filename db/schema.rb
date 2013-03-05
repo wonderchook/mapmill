@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121201223800) do
+ActiveRecord::Schema.define(:version => 20130304115700) do
 
   create_table "images", :force => true do |t|
     t.integer  "hits",        :default => 0,   :null => false
@@ -51,5 +51,18 @@ ActiveRecord::Schema.define(:version => 20121201223800) do
     t.datetime "updated_at"
     t.string   "map_export",                                   :default => ""
   end
+
+  create_table "votes", :force => true do |t|
+    t.integer  "participant_id"
+    t.integer  "image_id"
+    t.integer  "rating"
+    t.string   "email"
+    t.string   "ip_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "votes", ["image_id"], :name => "index_votes_on_image_id"
+  add_index "votes", ["participant_id"], :name => "index_votes_on_participant_id"
 
 end
