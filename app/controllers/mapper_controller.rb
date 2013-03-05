@@ -67,7 +67,7 @@ class MapperController < ApplicationController
           if i = Image.find(params[:id])
             points = params[:points].to_i
             i.points += points if points.to_i < 11
-            i.vote(params[:mapmill_id], points)
+            i.vote(params[:mapmill_id], session[:email], points)
           end
           logger.info "Email: #{session[:email]}" if session[:email]
           if params[:ui] != ""
@@ -75,7 +75,7 @@ class MapperController < ApplicationController
           else
             path = "/"
           end
-          path += '?o=x&last='+i.id
+          path += '?o=x&last='+i.id.to_s
           if  params[:ajax]
                   render :text => "success"
           else
