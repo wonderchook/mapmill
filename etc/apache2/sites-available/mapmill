@@ -1,1 +1,10 @@
-../sites-available/mapmill
+<VirtualHost *:80>
+    #ServerName mapmill.hotosm.org
+    #ServerAlias sandy.hotosm.org
+    DocumentRoot /srv/mapmill/public
+    RailsBaseURI /
+    <Directory /srv/mapmill/public>
+        Allow from all
+        Options -MultiViews
+    </Directory>
+</VirtualHost>

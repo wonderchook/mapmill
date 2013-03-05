@@ -15,12 +15,15 @@ su -c 'createuser -s ubuntu' postgres
 createdb mapmill
 ln -s ../sites-available/mapmill /etc/apache2/sites-enabled/
 rm /etc/apache2/sites-enabled/000-default 
-cd gems
 wget http://production.cf.rubygems.org/rubygems/rubygems-1.4.2.zip
 unzip rubygems-1.4.2.zip 
 cd rubygems-1.4.2/
 ruby setup.rb
 gem1.8 install bundler
 bundle install
+mv ~/mapmill /srv
+cd /srv/mapmill
+cp config/database.yml.example config/database.yml
+rake db:migrate
 /etc/init.d/apache2 restart
 pip install mgrs
