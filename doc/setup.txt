@@ -1,10 +1,10 @@
 hostname mapmill
-vi /etc/hosts
 mount /dev/xvdf /mnt
 git clone git@github.com:wonderchook/mapmill
 cd ~/mapmill/etc
 apt-get update
-apt-get install `cat doc/installed*`
+apt-get upgrade
+apt-get -y install `cat installed*`
 /etc/init.d/postgresql stop
 cp -a * /etc
 sysctl -w kernel.shmmax=288997376
