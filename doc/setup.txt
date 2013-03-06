@@ -10,7 +10,7 @@ cp -a * /etc
 sysctl -w kernel.shmmax=288997376
 /etc/init.d/postgresql start
 su -c 'createuser -s ubuntu' postgres
-createdb mapmill
+su -c 'createdb mapmill' ubuntu
 ln -s ../sites-available/mapmill /etc/apache2/sites-enabled/
 rm /etc/apache2/sites-enabled/000-default 
 wget http://production.cf.rubygems.org/rubygems/rubygems-1.4.2.zip
