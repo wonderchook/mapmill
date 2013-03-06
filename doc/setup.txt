@@ -1,15 +1,13 @@
 hostname mapmill
-mount /dev/xvdf /mnt
-git clone git@github.com:wonderchook/mapmill
+apt-get -y install git
+git clone http://github.com/wonderchook/mapmill
 cd ~/mapmill/etc
 apt-get update
-apt-get upgrade
+apt-get -y upgrade
 apt-get -y install `cat installed*`
 /etc/init.d/postgresql stop
 cp -a * /etc
 sysctl -w kernel.shmmax=288997376
-mv /var/lib/postgresql /mnt
-ln -s /mnt/postgresql /var/lib/postgresql
 /etc/init.d/postgresql start
 su -c 'createuser -s ubuntu' postgres
 createdb mapmill
@@ -20,10 +18,11 @@ unzip rubygems-1.4.2.zip
 cd rubygems-1.4.2/
 ruby setup.rb
 gem1.8 install bundler
-bundle install
 mv ~/mapmill /srv
 cd /srv/mapmill
+bundle install
 cp config/database.yml.example config/database.yml
-rake db:migrate
 /etc/init.d/apache2 restart
 pip install mgrs
+chown -R ubuntu:ubuntu /srv/mapmill
+su -c 'rake db:migrate' ubuntu

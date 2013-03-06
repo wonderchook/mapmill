@@ -331,7 +331,6 @@ librtmp0
 libruby1.8
 libsasl2-2
 libsasl2-modules
-libselinux1
 libsigc++-2.0-0c2a
 libslang2
 libspatialite3
