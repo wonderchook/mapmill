@@ -1,0 +1,6 @@
+sudo mount /dev/xvdf /mnt
+sudo cp -a /mnt/srv/mapmill /srv
+sudo /etc/init.d/postgresql stop
+sudo cp -a /mnt/var/lib/postgresql /var/lib
+sudo /etc/init.d/postgresql start
+sudo /etc/init.d/apache2 restart
