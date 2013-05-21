@@ -1,5 +1,5 @@
 from osgeo import ogr, osr
-import re, mgrs, json, sys
+import re, mgrs, json, sys, urllib2
 
 wgs84 = osr.SpatialReference()
 wgs84.SetWellKnownGeogCS("EPSG:4326")
@@ -67,9 +67,40 @@ def shapefile_to_json(shp_filename, json_filename):
     json.dump(feature_dicts, output, indent=2)
     output.close()
 
+def get_esri_fields_as_dict(esri, key_field="Filename", rename_map = {
+    'latitude': 'lat', 'longitude': 'lon', 'ImageURL': 'url',
+    'ThumbnailURL': 'thumbnail', 'strDateCaptured': 'captured_at'
+    }):
+    features = {}
+    for item in esri["features"]:
+        feature = item["attributes"]
+        value = dict((rename_map.get(field, field), feature[field]) for field in feature.keys())
+        features[value.pop(key_field)] = value
+    return features
+
+def esri_json_to_json(esri_file, json_filename):
+    esri = json.load(esri_file)
+    features = get_esri_fields_as_dict(esri)
+    add_mgrs_coords(features.values())
+    output = open(json_filename, 'w')
+    json.dump(features, output, indent=2)
+    output.close()
+
+def fetch_esri_json(url, event_id):
+    # 'http://50.18.155.202/arcgis/rest/services/CAPImages/MapServer/0/query?where=EventID%3D6&outFields=*&returnGeometry=true&f=pjson'
+    url = url + '/arcgis/rest/services/CAPImages/MapServer/0/query?where=EventID%%3D%d&outFields=*&returnGeometry=true&f=pjson' % event_id
+    return urllib2.urlopen(url)
+
 if __name__ == '__main__':
     args = sys.argv[1:]
     if len(args) == 2:
-        shapefile_to_json(args[0], args[1])
+        if args[0].endswith(".shp"):
+            shapefile_to_json(args[0], args[1])
+        else:
+            data = file(args[0])
+            esri_json_to_json(data, args[-1])
+    elif len(args) == 3:
+        data = fetch_esri_json(args[0], int(args[1]))
+        esri_json_to_json(data, args[-1])
     else:
         raise SystemExit('Usage: %s <infile.shp> <outfile.json>' % sys.argv[0])
