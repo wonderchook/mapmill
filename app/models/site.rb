@@ -43,6 +43,7 @@ class Site < ActiveRecord::Base
 	  metadata = JSON.parse(json)
           metadata.each do |image, image_metadata|
             next unless image[-3..-1] && image[-3..-1].downcase == 'jpg'
+            #next if Image.find_by_path(path)
             path = image_metadata["url"] || "sites/#{name}/#{image}"
             i = Image.new({
               :path => path,
@@ -56,7 +57,11 @@ class Site < ActiveRecord::Base
               :thumbnail => image_metadata["thumbnail"],
               :box =>image_metadata["box"].to_json
             })
-            i.save
+            begin
+              i.save
+            rescue ActiveRecord::StatementInvalid
+              # GO FUCK YOURSELF RAILS
+            end
           end
   	end
   	
