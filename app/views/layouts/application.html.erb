@@ -28,6 +28,7 @@
       // Hide on click
       jQuery("#mainimage").click(function(){
         jQuery(this).removeClass('no-loupe');
+        jQuery(this).mousemove();
       });
       jQuery(".loupe").click(function(){
         jQuery("#mainimage").addClass('no-loupe');
