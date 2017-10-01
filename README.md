@@ -16,20 +16,25 @@ this summer.
 The application itself is adapted from MapMill, which was originally developed
 by Jeff Warren for aerial image quality evaluation. 
 
+## Installation ##
+
+```
+$ bundle install
+```
+ 
 ## Requires ##
 
-* RubyGems == 1.4.2 (this is IMPORTANT, because Ruby sucks)
+* Ruby ~2.1.5 seems to work
 * Ruby on Rails ~2.3.5
-* Ruby 1.8.7 (Ruby 1.9.x doesn't work for now as there is no packaged version of the geohash gem yet for 1.9.x)
-* ImageMagick
+* Gems
+  * geokit
+  * will_paginate
+  * json
+  * rdoc
 
-## Gems ##
-
-    mini_magick
-    geokit
-    will_paginate
-    json
-    rdoc
+Note: ImageMagick and the mini_magick gem were needed by a prior version for
+generating thumbnails. The current version either doesn't need them or assumes
+that they are being generated elsewhere.
 
 ## Setup ##
 
@@ -37,7 +42,7 @@ by Jeff Warren for aerial image quality evaluation.
 * Run `util/index_mgrs.py` on the new directory to add the georeferencing. Read
 util/README to learn how to get that to work.
 * Go to http://[server]:3000/admin and create the new site in the database.
-* Thumbnails are generated and dropped in matching `foo_thumb` folders.
+* ~~Thumbnails are generated and dropped in matching `foo_thumb` folders.~~
 
 ## Credits & License ##
 
